@@ -1,4 +1,4 @@
-// Global variables
+/* Global variables */
 let grid = [];
 let N = 50;
 let T = 2.5;
@@ -70,6 +70,15 @@ function drawGrid() {
       ctx.fillRect(j * cellWidth, i * cellHeight, cellWidth, cellHeight);
     }
   }
+  pulseCanvas(); // trigger pulse effect after drawing grid
+}
+
+// Function to add a pulse animation to the canvas
+function pulseCanvas() {
+  canvas.classList.add("pulse");
+  setTimeout(() => {
+    canvas.classList.remove("pulse");
+  }, 100);
 }
 
 // Perform one Monte Carlo sweep using the Metropolis algorithm
@@ -108,7 +117,7 @@ function simulationStep() {
   }, [0]);
 }
 
-// Reset the simulation (pause if running, reinitialize grid and plot)
+// Reset the simulation (pause if running, reinitialize grid and graph)
 function resetSimulation() {
   if (isRunning) {
     toggleSimulation(); // pause if running
@@ -116,16 +125,20 @@ function resetSimulation() {
   initGrid();
   drawGrid();
   stepCount = 0;
-  // Reinitialize the Plotly graph
+  // Reinitialize the Plotly graph with enhanced styling
   Plotly.react('plot', [{
     x: [0],
     y: [computeMagnetization()],
     mode: 'lines',
-    line: { shape: 'spline' }
+    line: { shape: 'spline', color: '#007BFF' }
   }], {
     title: 'Magnetization',
-    xaxis: { title: 'Time (steps)' },
-    yaxis: { title: 'Magnetization' }
+    titlefont: { family: 'Roboto, sans-serif', size: 20 },
+    xaxis: { title: 'Time (steps)', titlefont: { family: 'Roboto, sans-serif' } },
+    yaxis: { title: 'Magnetization', titlefont: { family: 'Roboto, sans-serif' } },
+    plot_bgcolor: '#eef2f3',
+    paper_bgcolor: '#fff',
+    font: { family: 'Roboto, sans-serif', color: '#333' }
   });
 }
 
@@ -142,17 +155,21 @@ function toggleSimulation() {
   }
 }
 
-// Initialize the Plotly graph for magnetization
+// Initialize the Plotly graph for magnetization with enhanced styling
 function initPlot() {
   Plotly.newPlot('plot', [{
     x: [0],
     y: [computeMagnetization()],
     mode: 'lines',
-    line: { shape: 'spline' }
+    line: { shape: 'spline', color: '#007BFF' }
   }], {
     title: 'Magnetization',
-    xaxis: { title: 'Time (steps)' },
-    yaxis: { title: 'Magnetization' }
+    titlefont: { family: 'Roboto, sans-serif', size: 20 },
+    xaxis: { title: 'Time (steps)', titlefont: { family: 'Roboto, sans-serif' } },
+    yaxis: { title: 'Magnetization', titlefont: { family: 'Roboto, sans-serif' } },
+    plot_bgcolor: '#eef2f3',
+    paper_bgcolor: '#fff',
+    font: { family: 'Roboto, sans-serif', color: '#333' }
   });
 }
 
