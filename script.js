@@ -2,6 +2,7 @@
 let grid = [];
 let N = 50;
 let T = 2.5;
+let extField = 0.0;
 let canvas, ctx;
 let isRunning = false;
 let simulationInterval;
@@ -13,6 +14,7 @@ function init() {
   ctx = canvas.getContext("2d");
   N = parseInt(document.getElementById("gridSize").value);
   T = parseFloat(document.getElementById("temp").value);
+  extField = parseFloat(document.getElementById("extField").value);
 
   // Initialize grid and draw initial state
   initGrid();
@@ -23,6 +25,12 @@ function init() {
   document.getElementById("temp").addEventListener("input", function() {
     T = parseFloat(this.value);
     document.getElementById("tempValue").textContent = T;
+  });
+
+  // External field slider updates
+  document.getElementById("extField").addEventListener("input", function() {
+    extField = parseFloat(this.value);
+    document.getElementById("extFieldValue").textContent = extField;
   });
 
   // Grid size input change resets simulation
@@ -95,9 +103,10 @@ function simulationStep() {
     let left = grid[i][(j - 1 + N) % N];
     let right = grid[i][(j + 1) % N];
 
-    // Energy change if spin is flipped (with J=1, no external field)
+    // Energy change if spin is flipped (J=1) including external field:
+    // ΔE = 2 * spin * (sumNeighbors + extField)
     let sumNeighbors = up + down + left + right;
-    let deltaE = 2 * spin * sumNeighbors;
+    let deltaE = 2 * spin * (sumNeighbors + extField);
 
     // Accept flip if energy decreases or probabilistically otherwise
     if (deltaE <= 0 || Math.random() < Math.exp(-deltaE / T)) {
